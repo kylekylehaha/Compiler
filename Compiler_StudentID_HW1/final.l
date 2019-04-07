@@ -79,12 +79,14 @@ quota \"
 \t		{;}
 
 "/*"				{ 
-				printf("/* \t");
-				BEGIN(C_COMMENT); 
-				}
-<C_COMMENT>"*/"			{ printf("%s \t C Comment\n", yytext);
-				BEGIN(INITIAL);
-				}
+					printf("/* \t");
+					BEGIN(C_COMMENT); 
+					}
+<C_COMMENT>"*/"			{ 
+					printf("%s \t C Comment\n", yytext);
+					BEGIN(INITIAL);
+					}
+"//".*				{ printf ("%s \t C++ Comment\n", yytext); }
 
 %%
 
