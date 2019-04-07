@@ -47,6 +47,7 @@ number {digit}+
 "else"		{ printf("%s \t ELSE\n", yytext); }
 "for"		{ printf("%s \t FOR\n", yytext); }
 "while"		{ printf("%s \t WHILE\n", yytext); }
+"string"	{ printf("%s \t STRING\n", yytext); }
 "int"		{ printf("%s \t INT\n", yytext); }
 "float"		{ printf("%s \t FLOAT\n", yytext); }
 
@@ -100,7 +101,17 @@ number {digit}+
 				}
 
 
-"\""				{ printf ("%s \t QUOTA\n", yytext); }				
+"\""				{ 
+					printf ("\" \t QUOTA\n"); 
+					BEGIN(STRING);
+				}		
+<STRING>.			{
+					printf ("%s",yytext);
+				}		
+<STRING>."\""			{
+					printf ("%c \t STR_CONST\n%c \t QUOTA\n",yytext[0],yytext[1]);
+					BEGIN(INITIAL);
+				}
 %%
 
 
