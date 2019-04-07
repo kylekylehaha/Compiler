@@ -2,7 +2,7 @@
 %{
 	#include <stdio.h>
 	#include <stdlib.h>
-	int line_number = 2;		/* start from one and the last sentence don't have \n */
+	int line_number = 0;			
 	int comment_number = 0;	
 %}
 
@@ -12,9 +12,8 @@ letter [a-zA-Z]
 digit [0-9]
 id {letter}+({letter}|{digit})*
 number {digit}+
-quota \"
 
-%x C_COMMENT
+%x C_COMMENT STRING 
 
 /* Rules section */
 %%
@@ -42,14 +41,12 @@ quota \"
 "]"	{ printf("%s \t RSB\n", yytext); }
 ","	{ printf("%s \t COMMA\n", yytext); }
 ";"	{ printf("%s \t SEMICOLON\n", yytext); }
-{quota}	{ printf("%s \t QUOTA\n", yytext); }
 
 "print"		{ printf("%s \t PRINT\n", yytext); }
 "if"		{ printf("%s \t IF\n", yytext); }
 "else"		{ printf("%s \t ELSE\n", yytext); }
 "for"		{ printf("%s \t FOR\n", yytext); }
 "while"		{ printf("%s \t WHILE\n", yytext); }
-"string(keyword)"	{ printf("%s \t STRING\n", yytext); }
 "int"		{ printf("%s \t INT\n", yytext); }
 "float"		{ printf("%s \t FLOAT\n", yytext); }
 
@@ -76,7 +73,7 @@ quota \"
 {number}	{ printf("%s \t I_CONST\n", yytext); }
 {number}\.{number}*	{ printf("%s \t F_CONST\n", yytext); }
 {id}	{ printf("%s \t ID\n", yytext); }
-"\n"		{ line_number++; }
+"\n"		{ line_number++;}
 " "		{;}
 \t		{;}
 
@@ -91,14 +88,19 @@ quota \"
 				}
 <C_COMMENT>\n			{
 					printf("%s", yytext);  
+					line_number++;
 					comment_number++;
 				}
-<C_COMMENT>.			{ printf("%s",yytext); }
+<C_COMMENT>.			{ 
+					printf("%s",yytext);
+				}
 "//".*				{
 					comment_number++; 
 					printf ("%s \t C++ Comment\n", yytext); 
 				}
 
+
+"\""				{ printf ("%s \t QUOTA\n", yytext); }				
 %%
 
 
