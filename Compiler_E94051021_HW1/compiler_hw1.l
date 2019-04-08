@@ -80,33 +80,35 @@ number {digit}+
 " "		{;}
 \t		{;}
 
-"/*"				{ 
-					printf("/* \t");
-					BEGIN(C_COMMENT); 
-				}
-<C_COMMENT>"*/"			{
-					comment_number++;
-					printf("%s \t C Comment\n", yytext);
-					BEGIN(INITIAL);
-				}
-<C_COMMENT>\n			{
-					printf("%s", yytext);  
-					line_number++;
-					comment_number++;
-				}
-<C_COMMENT>.			{ 
-					printf("%s",yytext);
-				}
-"//".*				{
-					comment_number++; 
-					printf ("%s \t C++ Comment\n", yytext); 
-				}
+"/*"	{ 
+	printf("/* \t");
+	BEGIN(C_COMMENT); 
+}
+<C_COMMENT>"*/"		{	
+	comment_number++;
+	printf("%s \t C Comment\n", yytext);
+	BEGIN(INITIAL);
+}
+<C_COMMENT>\n		{
+	printf("%s", yytext);  
+	line_number++;
+	comment_number++;
+}
+<C_COMMENT>.		{ 
+	printf("%s",yytext);
+}
 
-\".*\"				{
+"//".*			{
+	comment_number++; 
+	printf ("%s \t C++ Comment\n", yytext); 
+}
+
+\".*\"			{
 	str = (char*)calloc(strlen(yytext)-1, sizeof(char));
    	strncpy(str, &yytext[1], strlen(yytext)-2);
     	printf ("\" \t QUOTA\n%s \t STR_CONST\n\" \t QUOTA\n", str);
 }
+
 %%
 
 
