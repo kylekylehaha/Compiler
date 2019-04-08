@@ -34,7 +34,6 @@ number {digit}+
 "=="	{ printf("%s \t DEQ\n", yytext); }
 "!="	{ printf("%s \t NE\n", yytext); }
 
-
 "{"	{ printf("%s \t LCB\n", yytext); }
 "}"	{ printf("%s \t RCB\n", yytext); }
 "("	{ printf("%s \t LB\n", yytext); }
@@ -59,7 +58,6 @@ number {digit}+
 "*="	{ printf("%s \t MULASGN\n", yytext); }
 "/="	{ printf("%s \t DIVASGN\n", yytext); }
 "%="	{ printf("%s \t MODASGN\n", yytext); }
-
 
 "&&"	{ printf("%s \t AND\n", yytext); }
 "||"	{ printf("%s \t OR\n", yytext); }
@@ -110,7 +108,6 @@ number {digit}+
 }
 
 %%
-
 
 /*	C Code section */
 int yywrap(void)
