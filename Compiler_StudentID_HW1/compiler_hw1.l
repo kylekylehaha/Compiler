@@ -4,6 +4,7 @@
 	#include <stdlib.h>
 	int line_number = 0;			
 	int comment_number = 0;	
+	char *str;
 %}
 
 /* Define regular expression label */
@@ -13,7 +14,8 @@ digit [0-9]
 id {letter}+({letter}|{digit})*
 number {digit}+
 
-%x C_COMMENT STRING 
+%x C_COMMENT
+%x STR 
 
 /* Rules section */
 %%
@@ -100,18 +102,11 @@ number {digit}+
 					printf ("%s \t C++ Comment\n", yytext); 
 				}
 
-
-"\""				{ 
-					printf ("\" \t QUOTA\n"); 
-					BEGIN(STRING);
-				}		
-<STRING>.			{
-					printf ("%s",yytext);
-				}		
-<STRING>."\""			{
-					printf ("%c \t STR_CONST\n%c \t QUOTA\n",yytext[0],yytext[1]);
-					BEGIN(INITIAL);
-				}
+\".*\"				{
+	str = (char*)calloc(strlen(yytext)-1, sizeof(char));
+   	strncpy(str, &yytext[1], strlen(yytext)-2);
+    	printf ("\" \t QUOTA\n%s \t STR_CONST\n\" \t QUOTA\n", str);
+}
 %%
 
 
